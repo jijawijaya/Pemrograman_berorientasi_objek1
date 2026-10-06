@@ -13,4 +13,4 @@ public class MataKuliah {
     public String getKodeMk() { return kodeMk; }
     public String getNamaMk() { return namaMk; }
     public int getSks() { return sks; }
-}
+}   

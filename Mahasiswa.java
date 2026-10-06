@@ -14,6 +14,27 @@ public class Mahasiswa extends Pengguna {
     }
 
     public String getNim() { return nim; }
+    public int getTotalHadir(int indexMk) { return totalHadir[indexMk]; }
+
+    public void tampilkanRekapKehadiranMatkul(int indexMk, MataKuliah mk, int totalPertemuan) {
+        int h = totalHadir[indexMk];
+        int s = totalSakit[indexMk];
+        int iz = totalIzin[indexMk];
+        int a = totalAlfa[indexMk];
+
+        System.out.println("-----------------------------------------------");
+        System.out.printf("%-19s: %s%n", "Mata Kuliah", mk.getNamaMk());
+        System.out.printf("%-19s: %s%n", "Kode", mk.getKodeMk());
+        System.out.printf("%-19s: %d%n", "SKS", mk.getSks());
+        System.out.printf("%-19s: %d dari %d pertemuan%n", "Presensi", h, totalPertemuan);
+        System.out.printf("%-19s: Hadir %d | Sakit %d | Izin %d | Alfa %d%n", "Rincian", h, s, iz, a);
+        double persentase = totalPertemuan > 0 ? ((double) h / totalPertemuan) * 100 : 0.0;
+        System.out.printf("%-19s: %.1f%%%n", "Persentase hadir", persentase);
+        System.out.printf("%-19s: %s%n", "Syarat ujian", a <= 3
+                ? "Memenuhi syarat"
+                : "Tidak memenuhi syarat (Alfa > 3)");
+        System.out.println("-----------------------------------------------");
+    }
 
     // Catat presensi berdasarkan indeks mata kuliah
     public void catatPresensi(int indexMk, String status) {

@@ -15,12 +15,14 @@ public class Main {
 
         // Penghitung jumlah BAP/Pertemuan per Mata Kuliah [PBO, StructData, ADPL]
         int[] totalPertemuanPerMk = {0, 0, 0};
+        // Target sesi per mata kuliah dalam satu semester untuk tampilan mahasiswa.
+        int[] targetPertemuanPerMk = {16, 16, 16};
 
         // 2. Data Pengguna
         Dosen dosenPbo = new Dosen("04123456", "Dr. Simon", "04123456", "Matana12");
 
         Mahasiswa[] daftarMahasiswa = {
-            new Mahasiswa("220010012", "Rian Pratama", "220010012", "Jakarta13"),
+            new Mahasiswa("220010012", "Rian Pratama", "220010012", "123"),
             new Mahasiswa("220010013", "Budi Santoso", "220010013", "Tangerang12"),
             new Mahasiswa("220010014", "Siti Aminah",  "220010014", "Banten14")
         };
@@ -137,7 +139,7 @@ public class Main {
                         if (daftarBap.isEmpty()) {
                             System.out.println("Belum ada BAP yang tersimpan.");
                         } else {
-                            for (Bap b : daftarBap) b.tampilkanBap();
+                            tampilkanRekapBapPerMataKuliah(daftarMk, daftarBap);
                         }
 
                     } else if (pilih.equals("4")) {
@@ -148,29 +150,40 @@ public class Main {
                     Mahasiswa mhsAktif = (Mahasiswa) userAktif;
 
                     System.out.println("\n--- MENU MAHASISWA ---");
-                    System.out.println("1. Lihat Mata Kuliah & SKS");
-                    System.out.println("2. Cek Presensi Saya & Syarat UTS/UAS");
+                    System.out.println("1. Kelas Saya (Mata Kuliah & Presensi)");
+                    System.out.println("2. Cek Rekap Presensi Semua Mata Kuliah");
                     System.out.println("3. Lihat Riwayat BAP Perkuliahan");
                     System.out.println("4. Logout");
                     System.out.print("Pilih Menu (1-4): ");
                     String pilih = input.nextLine();
 
                     if (pilih.equals("1")) {
-                        System.out.println("\n=== MATA KULIAH YANG DIAMPUL ===");
-                        for (MataKuliah mk : daftarMk) {
-                            System.out.println("- " + mk.getKodeMk() + " : " + mk.getNamaMk() + " (" + mk.getSks() + " SKS)");
+                        System.out.println("\n=== KELAS SAYA ===");
+                        for (int i = 0; i < daftarMk.length; i++) {
+                            System.out.println((i + 1) + ". " + daftarMk[i].getNamaMk());
+                            System.out.println("   " + daftarMk[i].getKodeMk() + " | " + daftarMk[i].getSks() + " SKS");
+                            System.out.println("   Presensi: " + mhsAktif.getTotalHadir(i) + " dari "
+                                    + targetPertemuanPerMk[i] + " pertemuan");
+                        }
+                        System.out.print("Pilih kelas untuk melihat detail (1-" + daftarMk.length + ", 0 untuk kembali): ");
+                        int mkIdx = Integer.parseInt(input.nextLine()) - 1;
+                        if (mkIdx >= 0 && mkIdx < daftarMk.length) {
+                            System.out.println("\n=== DETAIL KELAS ===");
+                            mhsAktif.tampilkanRekapKehadiranMatkul(mkIdx, daftarMk[mkIdx], targetPertemuanPerMk[mkIdx]);
+                            System.out.println("\n--- DAFTAR SESI / BAP ---");
+                            tampilkanRiwayatBapMataKuliah(daftarMk[mkIdx], daftarBap);
                         }
 
                     } else if (pilih.equals("2")) {
                         System.out.println("\n--- REKAP PRESENSI & SYARAT UJIAN ---");
-                        mhsAktif.tampilkanRekapKehadiran(daftarMk, totalPertemuanPerMk);
+                        mhsAktif.tampilkanRekapKehadiran(daftarMk, targetPertemuanPerMk);
 
                     } else if (pilih.equals("3")) {
                         System.out.println("\n--- RIWAYAT BAP PERKULIAHAN ---");
                         if (daftarBap.isEmpty()) {
                             System.out.println("Belum ada perkuliahan.");
                         } else {
-                            for (Bap b : daftarBap) b.tampilkanBap();
+                            tampilkanRekapBapPerMataKuliah(daftarMk, daftarBap);
                         }
 
                     } else if (pilih.equals("4")) {
@@ -180,5 +193,25 @@ public class Main {
             }
         }
         input.close();
+    }
+
+    private static void tampilkanRekapBapPerMataKuliah(MataKuliah[] daftarMk, ArrayList<Bap> daftarBap) {
+        for (MataKuliah mk : daftarMk) {
+            System.out.println("\n=== " + mk.getKodeMk() + " - " + mk.getNamaMk() + " ===");
+            tampilkanRiwayatBapMataKuliah(mk, daftarBap);
+        }
+    }
+
+    private static void tampilkanRiwayatBapMataKuliah(MataKuliah mk, ArrayList<Bap> daftarBap) {
+        boolean adaBap = false;
+        for (Bap b : daftarBap) {
+            if (b.getKodeMk().equals(mk.getKodeMk())) {
+                b.tampilkanBap();
+                adaBap = true;
+            }
+        }
+        if (!adaBap) {
+            System.out.println("Belum ada BAP untuk mata kuliah ini.");
+        }
     }
 }
