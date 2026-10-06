@@ -2,20 +2,20 @@
 
 public class Mahasiswa extends Pengguna {
     private String nim;
+    private Kehadiran dataKehadiran; // Relationship / Komposisi dengan class Kehadiran
 
-    public Mahasiswa(String id, String nama, String nim, String password) {
+    public Mahasiswa(String id, String nama, String nim, String password, Kehadiran dataKehadiran) {
         super(id, nama, "Mahasiswa", password);
-        setNim(nim);
+        this.nim = nim;
+        this.dataKehadiran = dataKehadiran;
     }
 
-    public String getNim() { return nim; }
+    public String getNim() {
+        return nim;
+    }
 
-    public void setNim(String nim) {
-        if (nim != null && nim.length() >= 5) {
-            this.nim = nim;
-        } else {
-            this.nim = "00000000";
-        }
+    public Kehadiran getDataKehadiran() {
+        return dataKehadiran;
     }
 
     @Override
@@ -23,6 +23,5 @@ public class Mahasiswa extends Pengguna {
         System.out.println("=== DASHBOARD MAHASISWA ===");
         super.tampilkanTampilanRole();
         System.out.println("NIM  : " + nim);
-        System.out.println("Akses: [1] Lihat BAP & Presensi Perkuliahan");
     }
 }

@@ -2,27 +2,30 @@
 
 public class Kehadiran {
     private int jumlahHadir;
-    private int totalMahasiswa;
+    private int totalPertemuan;
 
-    public Kehadiran(int jumlahHadir, int totalMahasiswa) {
-        this.totalMahasiswa = totalMahasiswa > 0 ? totalMahasiswa : 1;
-        setJumlahHadir(jumlahHadir);
+    public Kehadiran(int jumlahHadir, int totalPertemuan) {
+        this.jumlahHadir = jumlahHadir;
+        this.totalPertemuan = totalPertemuan;
     }
 
-    public void setJumlahHadir(int jumlahHadir) {
-        if (jumlahHadir >= 0 && jumlahHadir <= totalMahasiswa) {
-            this.jumlahHadir = jumlahHadir;
-        } else {
-            System.out.println("[VALIDASI] Jumlah hadir (" + jumlahHadir + ") melampaui batas! Diatur ke 0.");
-            this.jumlahHadir = 0;
-        }
+    public int getJumlahHadir() {
+        return jumlahHadir;
     }
 
-    public double hitungPersentase() {
-        return ((double) jumlahHadir / totalMahasiswa) * 100.0;
+    public int getTotalPertemuan() {
+        return totalPertemuan;
     }
 
-    public String getInfoKehadiran() {
-        return jumlahHadir + "/" + totalMahasiswa + " Mahasiswa (" + String.format("%.1f", hitungPersentase()) + "%)";
+    // Hitung persentase kehadiran
+    public double getPersentase() {
+        if (totalPertemuan == 0) return 0.0;
+        return ((double) jumlahHadir / totalPertemuan) * 100;
+    }
+
+    // Menampilkan info presensi
+    public void tampilkanInfo() {
+        System.out.println("Sudah Absen/Hadir : " + jumlahHadir + " dari " + totalPertemuan + " Pertemuan");
+        System.out.printf("Persentase Kehadiran: %.1f%%\n", getPersentase());
     }
 }

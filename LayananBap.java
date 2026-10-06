@@ -1,31 +1,26 @@
 // File: LayananBap.java
 
 public class LayananBap {
-    private RepositoriBap repo;
-    private VerifikatorBap verifikator;
-
-    public LayananBap(RepositoriBap repo, VerifikatorBap verifikator) {
-        this.repo = repo;
-        this.verifikator = verifikator;
-    }
-
+    
     public void buatBapBaru(Bap bap) {
-        if (repo.simpan(bap)) {
-            System.out.println("[SUKSES] BAP " + bap.getIdBap() + " berhasil diinput ke sistem.");
+        if (bap != null) {
+            System.out.println("[SUKSES] BAP berhasil diinput.");
         } else {
-            System.out.println("[ERROR] Penyimpanan BAP Penuh!");
+            System.out.println("[ERROR] Data BAP kosong!");
         }
     }
 
-    public void tampilkanLaporanSeluruhBap() {
-        System.out.println("\n------------------------------------------------");
-        System.out.println("       REKAPITULASI BERITA ACARA PERKULIAHAN    ");
-        System.out.println("------------------------------------------------");
-        Bap[] list = repo.getSemuaBap();
-        for (int i = 0; i < repo.getJumlahTersimpan(); i++) {
-            list[i].cetakBap();
-            verifikator.tampilkanStatusVerifikasi(list[i]);
-            System.out.println("------------------------------------------------");
+    public void tampilkanLaporanSeluruhBap(Bap[] daftarBap) {
+        System.out.println("\n-------------------------------------------");
+        System.out.println("     REKAPITULASI BERITA ACARA PERKULIAHAN ");
+        System.out.println("-------------------------------------------");
+        if (daftarBap != null) {
+            for (Bap b : daftarBap) {
+                if (b != null) {
+                    b.tampilkanBap();
+                }
+            }
         }
+        System.out.println("-------------------------------------------");
     }
 }
