@@ -7,7 +7,7 @@ public class Mahasiswa extends Pengguna {
     public Mahasiswa(String id, String nama, String nim, String password) {
         super(id, nama, "Mahasiswa", password);
         this.nim = nim;
-        this.jumlahHadir = 0;
+        this.jumlahHadir = 0; // Awalnya 0 pertemuan hadir
     }
 
     public String getNim() {
@@ -18,27 +18,28 @@ public class Mahasiswa extends Pengguna {
         return jumlahHadir;
     }
 
+    // Method ini dipanggil saat Dosen melakukan absensi 'y' (Hadir)
     public void tambahKehadiran() {
         this.jumlahHadir++;
     }
 
-    // Menampilkan rekap presensi dan kelayakan Ujian (UTS/UAS)
-    public void tampilkanRekapKehadiran(int totalPertemuanKelas) {
-        int alfa = totalPertemuanKelas - jumlahHadir;
+    // Menampilkan rekap presensi berdasarkan total BAP yang sudah di-input Dosen
+    public void tampilkanRekapKehadiran(int totalPertemuan) {
+        int alfa = totalPertemuan - jumlahHadir;
         
         System.out.println("Nama Mahasiswa      : " + getNama());
         System.out.println("NIM                 : " + nim);
-        System.out.println("Total Pertemuan     : " + totalPertemuanKelas + " Pertemuan");
+        System.out.println("Total Pertemuan     : " + totalPertemuan + " Pertemuan");
         System.out.println("Jumlah Hadir        : " + jumlahHadir + " Kali");
         System.out.println("Jumlah Alfa/Absen   : " + alfa + " Kali");
         
         double persentase = 0.0;
-        if (totalPertemuanKelas > 0) {
-            persentase = ((double) jumlahHadir / totalPertemuanKelas) * 100;
+        if (totalPertemuan > 0) {
+            persentase = ((double) jumlahHadir / totalPertemuan) * 100;
         }
         System.out.printf("Persentase Kehadiran: %.1f%%\n", persentase);
         
-        // Logika Syarat Kelayakan UTS / UAS (Maksimal Alfa 3 Kali)
+        // Logika Batas Maksimal Alfa = 3 Kali
         System.out.println("-------------------------------------------");
         if (alfa <= 3) {
             System.out.println("Status Syarat Ujian : [MEMENUHI SYARAT] - Boleh Ikut UTS/UAS");

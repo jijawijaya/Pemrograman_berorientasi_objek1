@@ -10,35 +10,22 @@ public class Main {
         // Data Mata Kuliah
         Matakuliah mkPbo = new Matakuliah("TIF201", "Pemrograman Berorientasi Objek", 3);
 
-        // Inisialisasi 3 Data Mahasiswa
-        Mahasiswa mhs1 = new Mahasiswa("MHS-01", "Rian Pratama", "220010012", "mhspass");
-        Mahasiswa mhs2 = new Mahasiswa("MHS-02", "Budi Santoso", "220010013", "mhspass");
-        Mahasiswa mhs3 = new Mahasiswa("MHS-03", "Siti Aminah",  "220010014", "mhspass");
+        // Inisialisasi Daftar Mahasiswa (Daftar ini disimpan terpisah agar mudah diloop saat absen)
+        Mahasiswa[] daftarMahasiswa = {
+            new Mahasiswa("MHS-01", "Rian Pratama", "220010012", "mhspass"),
+            new Mahasiswa("MHS-02", "Budi Santoso", "220010013", "mhspass"),
+            new Mahasiswa("MHS-03", "Siti Aminah",  "220010014", "mhspass")
+        };
 
-        // BAP & Data Awal (Contoh sudah berjalan 5 Pertemuan)
+        // List untuk menampung BAP yang di-input Dosen
         ArrayList<Bap> daftarBap = new ArrayList<>();
-        daftarBap.add(new Bap(1, "Pengenalan PBO & Java", 3));
-        daftarBap.add(new Bap(2, "Class, Object, & Attribute", 3));
-        daftarBap.add(new Bap(3, "Encapsulation & Access Modifier", 2));
-        daftarBap.add(new Bap(4, "Inheritance & Superclass", 2));
-        daftarBap.add(new Bap(5, "Polymorphism & Overriding", 2));
 
-        // Simulasi Kehadiran 5 Pertemuan Awal:
-        // Rian (MHS-01): Hadir 5x (Alfa 0x)
-        for (int i = 0; i < 5; i++) mhs1.tambahKehadiran();
-        
-        // Budi (MHS-02): Hadir 3x (Alfa 2x)
-        for (int i = 0; i < 3; i++) mhs2.tambahKehadiran();
-        
-        // Siti (MHS-03): Hadir 1x (Alfa 4x -> Melebihi batas 3x Alfa!)
-        mhs3.tambahKehadiran();
-
-        // Array Pengguna (Polymorphism)
+        // Array Seluruh Pengguna Sistem untuk Login (Polymorphism)
         Pengguna[] daftarUser = {
             new Dosen("DSN-01", "Dr. Simon", "04123456", "dosenpass"),
-            mhs1,
-            mhs2,
-            mhs3
+            daftarMahasiswa[0],
+            daftarMahasiswa[1],
+            daftarMahasiswa[2]
         };
 
         boolean running = true;
@@ -58,7 +45,7 @@ public class Main {
             System.out.print("Masukkan Password            : ");
             String passwordInput = input.nextLine().trim();
 
-            // Autentikasi Pengguna
+            // Autentikasi Login
             Pengguna userAktif = null;
             for (Pengguna p : daftarUser) {
                 if (p.getId().equalsIgnoreCase(userId) && p.cekPassword(passwordInput)) {
@@ -72,7 +59,7 @@ public class Main {
                 continue;
             }
 
-            // Dashboard
+            // Dashboard Role
             System.out.println("\n---------------------------------");
             userAktif.tampilkanTampilanRole();
             System.out.println("---------------------------------");
@@ -82,7 +69,7 @@ public class Main {
                 if (userAktif instanceof Dosen) {
                     System.out.println("\n--- MENU DOSEN ---");
                     System.out.println("1. Lihat Mata Kuliah");
-                    System.out.println("2. Input BAP & Presensi Mahasiswa Baru");
+                    System.out.println("2. Input BAP & Presensi Mahasiswa");
                     System.out.println("3. Lihat Rekap BAP Perkuliahan");
                     System.out.println("4. Logout");
                     System.out.print("Pilih Menu (1-4): ");
@@ -92,32 +79,26 @@ public class Main {
                         System.out.println("\nMata Kuliah: " + mkPbo.getKodeMk() + " - " + mkPbo.getNamaMk() + " (" + mkPbo.getSks() + " SKS)");
 
                     } else if (pilih.equals("2")) {
-                        int pertBaru = daftarBap.size() + 1;
+                        int pertBaru = daftarBap.size() + 1; // Otomatis pertemuan ke-1, ke-2, dst.
                         System.out.println("\n--- FORM INPUT BAP PERTEMUAN KE-" + pertBaru + " ---");
-                        System.out.print("Masukkan Materi Hari Ini: ");
+                        System.out.print("Masukkan Materi Perkuliahan Hari Ini: ");
                         String mat = input.nextLine();
 
+                        // Loop Presensi Mahasiswa secara Otomatis
                         System.out.println("\n--- ABSENSI MAHASISWA ---");
                         int totalHadirHariIni = 0;
 
-                        System.out.print("Apakah " + mhs1.getNama() + " (" + mhs1.getNim() + ") Hadir? (y/n): ");
-                        if (input.nextLine().equalsIgnoreCase("y")) {
-                            mhs1.tambahKehadiran();
-                            totalHadirHariIni++;
+                        for (Mahasiswa mhs : daftarMahasiswa) {
+                            System.out.print("Apakah " + mhs.getNama() + " (" + mhs.getNim() + ") Hadir? (y/n): ");
+                            String jawaban = input.nextLine().trim();
+
+                            if (jawaban.equalsIgnoreCase("y")) {
+                                mhs.tambahKehadiran(); // Update realtime jumlah hadir mahasiswa
+                                totalHadirHariIni++;
+                            }
                         }
 
-                        System.out.print("Apakah " + mhs2.getNama() + " (" + mhs2.getNim() + ") Hadir? (y/n): ");
-                        if (input.nextLine().equalsIgnoreCase("y")) {
-                            mhs2.tambahKehadiran();
-                            totalHadirHariIni++;
-                        }
-
-                        System.out.print("Apakah " + mhs3.getNama() + " (" + mhs3.getNim() + ") Hadir? (y/n): ");
-                        if (input.nextLine().equalsIgnoreCase("y")) {
-                            mhs3.tambahKehadiran();
-                            totalHadirHariIni++;
-                        }
-
+                        // Simpan BAP baru
                         daftarBap.add(new Bap(pertBaru, mat, totalHadirHariIni));
                         System.out.println("\n[BERHASIL] BAP & Presensi Pertemuan Ke-" + pertBaru + " Berhasil Disimpan!");
 
@@ -143,7 +124,7 @@ public class Main {
 
                     System.out.println("\n--- MENU MAHASISWA ---");
                     System.out.println("1. Lihat Mata Kuliah & SKS");
-                    System.out.println("2. Cek Kelayakan UTS / UAS & Presensi Saya");
+                    System.out.println("2. Cek Presensi Saya & Syarat UTS/UAS");
                     System.out.println("3. Lihat Riwayat BAP Perkuliahan");
                     System.out.println("4. Logout");
                     System.out.print("Pilih Menu (1-4): ");
@@ -155,12 +136,17 @@ public class Main {
                     } else if (pilih.equals("2")) {
                         System.out.println("\n--- STATUS PRESENSI & SYARAT UJIAN ---");
                         System.out.println("Mata Kuliah : " + mkPbo.getNamaMk());
+                        // Memanggil rekap presensi dengan total pertemuan = jumlah BAP yang ada
                         mhs.tampilkanRekapKehadiran(daftarBap.size());
 
                     } else if (pilih.equals("3")) {
                         System.out.println("\n--- RIWAYAT BAP PERKULIAHAN ---");
-                        for (Bap b : daftarBap) {
-                            b.tampilkanBap();
+                        if (daftarBap.isEmpty()) {
+                            System.out.println("Belum ada perkuliahan yang dilaksanakan.");
+                        } else {
+                            for (Bap b : daftarBap) {
+                                b.tampilkanBap();
+                            }
                         }
 
                     } else if (pilih.equals("4")) {
