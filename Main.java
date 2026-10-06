@@ -2,13 +2,21 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// [Konsep: Class] Main menjadi titik masuk yang mengatur jalannya aplikasi.
 public class Main {
+    // [Konsep: Behavior/method] main menjalankan alur login, menu, dan proses perkuliahan.
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
-        // 1. Data 3 Mata Kuliah
+        // [Konsep: Default constructor + setter] Objek dibuat kosong, lalu diisi lewat setter.
+        MataKuliah mkPbo = new MataKuliah();
+        mkPbo.setKodeMk("TIF201");
+        mkPbo.setNamaMk("Praktikum Pemrograman Berorientasi Objek");
+        mkPbo.setSks(3);
+
+        // [Konsep: Object + parameterized constructor] Objek mata kuliah lain dibuat dengan data awal.
         MataKuliah[] daftarMk = {
-            new MataKuliah("TIF201", "Praktikum Pemrograman Berorientasi Objek", 3),
+            mkPbo,
             new MataKuliah("TIF202", "Struktur Data", 3),
             new MataKuliah("TIF203", "Analisis & Desain Perangkat Lunak", 3)
         };
@@ -19,15 +27,17 @@ public class Main {
         int[] targetPertemuanPerMk = {16, 16, 16};
 
         // 2. Data Pengguna
+        // [Konsep: Object] Membuat satu objek Dosen dari class Dosen.
         Dosen dosenPbo = new Dosen("04123456", "Dr. Simon", "04123456", "Matana12");
 
+        // [Konsep: Object + parameterized constructor] Membuat objek-objek Mahasiswa.
         Mahasiswa[] daftarMahasiswa = {
             new Mahasiswa("220010012", "Rian Pratama", "220010012", "123"),
             new Mahasiswa("220010013", "Budi Santoso", "220010013", "Tangerang12"),
             new Mahasiswa("220010014", "Siti Aminah",  "220010014", "Banten14")
         };
 
-        // Upcasting ke Array Superclass Pengguna
+        // [Konsep: Upcasting + polymorphism] Objek subclass disimpan dalam array superclass Pengguna.
         Pengguna[] daftarUser = {
             dosenPbo,
             daftarMahasiswa[0],
@@ -52,7 +62,7 @@ public class Main {
             System.out.print("Masukkan Password            : ");
             String passwordInput = input.nextLine().trim();
 
-            // Login Validation (Polymorphism)
+            // [Konsep: Validasi] Mencocokkan ID dan password sebelum memberi akses.
             Pengguna userAktif = null;
             for (Pengguna u : daftarUser) {
                 if (u.getId().equalsIgnoreCase(userId) && u.cekPassword(passwordInput)) {
@@ -66,7 +76,7 @@ public class Main {
                 continue;
             }
 
-            // Dynamic Binding
+            // [Konsep: Dynamic binding + overriding] Method yang dipanggil mengikuti tipe objek sebenarnya.
             System.out.println("\n---------------------------------");
             userAktif.tampilkanTampilanRole();
             System.out.println("---------------------------------");
@@ -120,7 +130,8 @@ public class Main {
                                     System.out.println("[ERROR] Pilihan salah! Ketik 'h', 's', 'i', atau 'a'.");
                                 }
 
-                                mhs.catatPresensi(mkIdx, st);
+                                // [Konsep: Method overloading] Memanggil versi catatPresensi yang menerima char.
+                                mhs.catatPresensi(mkIdx, st.charAt(0));
 
                                 if (st.equals("h")) statHadir++;
                                 else if (st.equals("s")) statSakit++;
@@ -128,6 +139,7 @@ public class Main {
                                 else if (st.equals("a")) statAlfa++;
                             }
 
+                            // [Konsep: Object + state] BAP menyimpan data materi dan rekap sesi ini.
                             daftarBap.add(new Bap(daftarMk[mkIdx].getKodeMk(), pertBaru, mat, statHadir, statSakit, statIzin, statAlfa));
                             System.out.println("\n[BERHASIL] BAP & Presensi " + daftarMk[mkIdx].getNamaMk() + " Pertemuan Ke-" + pertBaru + " Disimpan!");
                         } else {
