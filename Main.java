@@ -25,7 +25,6 @@ public class Main {
         int[] totalPertemuanPerMk = {0, 0, 0};
         // Target sesi per mata kuliah dalam satu semester untuk tampilan mahasiswa.
         int[] targetPertemuanPerMk = {16, 16, 16};
-
         // 2. Data Pengguna
         // [Konsep: Object] Membuat satu objek Dosen dari class Dosen.
         Dosen dosenPbo = new Dosen("04123456", "Dr. Simon", "04123456", "Matana12");
